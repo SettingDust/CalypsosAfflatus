@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "settingdust.calypsos_afflatus.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "calypsos_afflatus.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ]
+}
