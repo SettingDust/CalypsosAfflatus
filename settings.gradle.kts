@@ -156,6 +156,68 @@ dependencyResolutionManagement.versionCatalogs.create("catalog") {
             )
         )
     )
+
+    maven(
+        id = "accessories",
+        group = "io.wispforest",
+        artifact = "accessories",
+        mcVersionToVersion = mapOf(
+            "1.20.1" to "1.0.0-beta.47",
+            "1.21.1" to "1.1.0-beta.48"
+        ),
+        versionFormat = VersionFormats.versionPlusMc,
+        mapping = listOf(
+            LoaderMapping(
+                "1.20.1", mapOf(
+                    "neoforge" to LoaderConfig(ArtifactTransformers.artifactDashLoader),
+                    "fabric" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                )
+            ),
+            LoaderMapping(
+                "1.21.1", mapOf(
+                    "neoforge" to LoaderConfig(ArtifactTransformers.artifactDashLoader),
+                    "fabric" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                )
+            ),
+        )
+    )
+
+    maven(
+        id = "curios",
+        group = "top.theillusivec4.curios",
+        artifact = "curios",
+        mcVersionToVersion = mapOf(
+            "1.20.1" to "5.14.1",
+            "1.21.1" to "9.5.1"
+        ),
+        versionFormat = VersionFormats.versionPlusMc,
+        mapping = listOf(
+            LoaderMapping(
+                "1.20.1", mapOf(
+                    "forge" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                )
+            ),
+            LoaderMapping(
+                "1.21.1", mapOf(
+                    "neoforge" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                )
+            ),
+        )
+    )
+
+    maven(
+        id = "trinkets",
+        group = "dev.emi",
+        artifact = "trinkets",
+        mcVersionToVersion = mapOf(
+            "1.20.1" to "3.7.2",
+            "1.21.1" to "3.10.0"
+        ),
+        mapping = listOf(
+            LoaderMapping("1.20.1", mapOf("fabric" to LoaderConfig)),
+            LoaderMapping("1.21.1", mapOf("fabric" to LoaderConfig)),
+        )
+    )
 }
 
 plugins {

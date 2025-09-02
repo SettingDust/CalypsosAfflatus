@@ -1,0 +1,16 @@
+package settingdust.calypsos_afflatus.adapter
+
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.Item
+import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
+
+interface LoaderAdapter {
+    companion object : LoaderAdapter by ServiceLoaderUtil.findService()
+
+    val isClient: Boolean
+
+    fun isModLoaded(modId: String): Boolean
+
+    fun <T : Item> T.creativeTab(key: ResourceKey<CreativeModeTab>)
+}

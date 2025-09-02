@@ -21,7 +21,7 @@ plugins {
 
     id("com.gradleup.shadow") version "9.0.2"
 
-    id("earth.terrarium.cloche") version "0.13.2-dust"
+    id("earth.terrarium.cloche") version "0.13.4"
 }
 
 val archive_name: String by rootProject.properties
@@ -48,6 +48,44 @@ repositories {
     maven("https://thedarkcolour.github.io/KotlinForForge/") {
         content {
             includeGroup("thedarkcolour")
+        }
+    }
+
+    maven("https://maven.theillusivec4.top/") {
+        content {
+            includeGroup("top.theillusivec4.curios")
+        }
+    }
+
+    maven("https://maven.terraformersmc.com/") {
+        content {
+            includeGroup("dev.emi")
+        }
+    }
+
+    maven("https://maven.ladysnake.org/releases") {
+        content {
+            includeGroup("dev.onyxstudios.cardinal-components-api")
+            includeGroup("org.ladysnake.cardinal-components-api")
+        }
+    }
+
+    maven("https://maven.wispforest.io/releases") {
+        content {
+            includeGroupAndSubgroups("io.wispforest")
+        }
+    }
+
+    maven("https://maven.shedaniel.me/") {
+        content {
+            includeGroup("me.shedaniel.cloth")
+        }
+    }
+
+    maven("https://maven.su5ed.dev/releases") {
+        content {
+            includeGroup("dev.su5ed.sinytra.fabric-api")
+            includeGroupAndSubgroups("org.sinytra")
         }
     }
 
@@ -135,6 +173,9 @@ cloche {
 
             dependencies {
                 fabricApi("0.92.6")
+
+                modImplementation(catalog.accessories.get1().get20().get1().fabric)
+                modImplementation(catalog.trinkets.get1().get20().get1())
             }
 
             tasks.named<GenerateFabricModJson>(generateModsManifestTaskName) {
@@ -169,6 +210,9 @@ cloche {
 
             dependencies {
                 fabricApi("0.116.5")
+
+                modImplementation(catalog.accessories.get1().get21().get1().fabric)
+                modImplementation(catalog.trinkets.get1().get21().get1())
             }
 
             tasks.named<GenerateFabricModJson>(generateModsManifestTaskName) {
@@ -250,6 +294,10 @@ cloche {
                     modId = "fabric-language-kotlin"
                     required = true
                 }
+
+                dependency {
+                    modId = "trinkets"
+                }
             }
 
             dependencies {
@@ -293,6 +341,9 @@ cloche {
                 implementation(catalog.mixinextras.forge)
 
                 modImplementation("thedarkcolour:kotlinforforge:4.11.0")
+
+                modImplementation(catalog.accessories.get1().get20().get1().neoforge)
+                modImplementation(catalog.curios.get1().get20().get1().forge)
             }
         }
     }
@@ -318,6 +369,9 @@ cloche {
 
             dependencies {
                 modImplementation("thedarkcolour:kotlinforforge-neoforge:5.9.0")
+
+                modImplementation(catalog.accessories.get1().get21().get1().neoforge)
+                modImplementation(catalog.curios.get1().get21().get1().neoforge)
             }
         }
 
@@ -363,6 +417,18 @@ cloche {
         }
     }
 
+    targets.withType<ForgeLikeTarget> {
+        metadata {
+            dependency {
+                modId = "curios"
+            }
+
+            dependency {
+                modId = "accessories"
+            }
+        }
+    }
+
     targets.all {
         if (isContainer()) {
             if (this is ForgeLikeTarget) {
@@ -400,7 +466,7 @@ val SourceSet.includeJarTaskName: String
 
 val MinecraftTarget.includeJarTaskName: String
     get() = when (this) {
-        is FabricTarget -> sourceSet.mergedIncludeJarTaskName
+        is FabricTarget -> sourceSet.includeJarTaskName
         is ForgeLikeTarget -> sourceSet.includeJarTaskName
         else -> throw IllegalArgumentException("Unsupported target $this")
     }
@@ -457,7 +523,7 @@ tasks {
         configurations.empty()
 
         for (target in cloche.targets.filter { it.isContainer() }) {
-            from(target.finalJar.map { zipTree(it) })
+            from(target.finalJar.map { zipTree(it.archiveFile) })
             manifest.inheritFrom(getByName<Jar>(target.includeJarTaskName).manifest)
         }
 
