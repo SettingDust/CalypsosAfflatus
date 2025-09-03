@@ -1,13 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import earth.terrarium.cloche.api.attributes.TargetAttributes
 import earth.terrarium.cloche.api.metadata.ModMetadata
 import earth.terrarium.cloche.api.target.*
 import earth.terrarium.cloche.tasks.GenerateFabricModJson
 import groovy.lang.Closure
 import net.msrandom.minecraftcodev.core.utils.lowerCamelCaseGradleName
 import net.msrandom.minecraftcodev.fabric.MinecraftCodevFabricPlugin
+import net.msrandom.minecraftcodev.includes.IncludesJar
 import org.gradle.jvm.tasks.Jar
 
 
@@ -21,7 +21,7 @@ plugins {
 
     id("com.gradleup.shadow") version "9.0.2"
 
-    id("earth.terrarium.cloche") version "0.13.4"
+    id("earth.terrarium.cloche") version "0.13.4-dust"
 }
 
 val archive_name: String by rootProject.properties
@@ -121,16 +121,6 @@ cloche {
             version {
                 start = "1.20.1"
             }
-        }
-
-        dependency {
-            modId = "geckolib"
-            required = true
-        }
-
-        dependency {
-            modId = "smartbrainlib"
-            required = true
         }
     }
 
@@ -239,19 +229,15 @@ cloche {
 
             dependencies {
                 for (target in targets) {
-                    include(project()) {
+                    include(project(":")) {
                         capabilities {
                             requireFeature(target.capabilitySuffix)
-                        }
-
-                        attributes {
-                            attributeProvider(TargetAttributes.MINECRAFT_VERSION, target.minecraftVersion)
                         }
                     }
                 }
             }
 
-            tasks.named<Jar>(includeJarTaskName) {
+            tasks.named<IncludesJar>(includeJarTaskName) {
                 archiveClassifier = target.loaderName
 
                 dependsOn(targets.map { it.includeJarTaskName })
@@ -382,7 +368,7 @@ cloche {
 
             dependencies {
                 for (target in targets) {
-                    include(project()) {
+                    include(project(":")) {
                         capabilities {
                             requireFeature(target.capabilitySuffix)
                         }
@@ -390,7 +376,7 @@ cloche {
                 }
             }
 
-            tasks.named<Jar>(includeJarTaskName) {
+            tasks.named<IncludesJar>(includeJarTaskName) {
                 archiveClassifier = target.loaderName
 
                 dependsOn(targets.map { it.includeJarTaskName })
