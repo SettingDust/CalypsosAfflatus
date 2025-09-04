@@ -3,9 +3,11 @@ package settingdust.calypsos_afflatus.adapter
 import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
 
 interface AccessoryAdapter {
-    companion object : Entrypoint {
+    class Entrypoint : settingdust.calypsos_afflatus.adapter.Entrypoint {
+        private val services by lazy { ServiceLoaderUtil.findServices<AccessoryAdapter>(required = false) }
+
         override fun construct() {
-            for (adapter in ServiceLoaderUtil.findServices<AccessoryAdapter>(required = false)) {
+            for (adapter in services) {
                 if (LoaderAdapter.isModLoaded(adapter.modId)) {
                     adapter.init()
                 }
