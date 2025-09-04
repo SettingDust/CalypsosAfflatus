@@ -7,5 +7,6 @@
   "mixins": [
   ],
   "client": [
+    "ModelPartAccessor"
   ]
 }

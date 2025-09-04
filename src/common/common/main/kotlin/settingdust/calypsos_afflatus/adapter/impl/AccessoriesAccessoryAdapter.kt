@@ -1,7 +1,6 @@
 package settingdust.calypsos_afflatus.adapter.impl
 
 import com.mojang.blaze3d.vertex.PoseStack
-import io.wispforest.accessories.api.AccessoriesAPI
 import io.wispforest.accessories.api.client.AccessoriesRendererRegistry
 import io.wispforest.accessories.api.client.AccessoryRenderer
 import io.wispforest.accessories.api.slot.SlotReference
@@ -11,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.adapter.AccessoryAdapter
-import settingdust.calypsos_afflatus.item.NightvisionGogglesAccessory
 
 class AccessoriesAccessoryAdapter : AccessoryAdapter {
     object Renderer : AccessoryRenderer {
@@ -41,7 +39,7 @@ class AccessoriesAccessoryAdapter : AccessoryAdapter {
 
     override val modId = "accessories"
     override fun init() {
-        AccessoriesAPI.registerAccessory(CalypsosAfflatusItems.NIGHTVISION_GOGGLES, NightvisionGogglesAccessory.Accessories)
+//        AccessoriesAPI.registerAccessory(CalypsosAfflatusItems.NIGHTVISION_GOGGLES, NightvisionGogglesAccessory.Accessories)
 
         AccessoriesRendererRegistry.registerRenderer(CalypsosAfflatusItems.NIGHTVISION_GOGGLES) { Renderer }
     }

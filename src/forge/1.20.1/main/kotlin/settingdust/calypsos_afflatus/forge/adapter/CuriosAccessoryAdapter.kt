@@ -51,7 +51,9 @@ class CuriosAccessoryAdapter : AccessoryAdapter {
         })
 
         if (LoaderAdapter.isClient) {
-            CuriosRendererRegistry.register(CalypsosAfflatusItems.NIGHTVISION_GOGGLES) { Renderer }
+            CuriosRendererRegistry.register(CalypsosAfflatusItems.NIGHTVISION_GOGGLES) {
+                Renderer
+            }
         }
     }
 }

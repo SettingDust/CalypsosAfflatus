@@ -13,6 +13,7 @@ import org.gradle.jvm.tasks.Jar
 
 plugins {
     java
+    idea
 
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
@@ -415,6 +416,11 @@ cloche {
         }
     }
 
+    val mcVersionToJavaVersion = mapOf(
+        "1.20.1" to JavaVersion.VERSION_17,
+        "1.21.1" to JavaVersion.VERSION_21,
+    )
+
     targets.all {
         if (isContainer()) {
             if (this is ForgeLikeTarget) {
@@ -440,6 +446,12 @@ cloche {
                     else -> throw IllegalArgumentException("Unsupported minecraft version $it")
                 }
             })
+        }
+
+        tasks.named<JavaCompile>(sourceSet.compileJavaTaskName) {
+            val javaVersion = mcVersionToJavaVersion[minecraftVersion.get()] ?: return@named
+            sourceCompatibility = javaVersion.majorVersion
+            targetCompatibility = javaVersion.majorVersion
         }
     }
 }
