@@ -58,5 +58,7 @@ interface NightvisionGogglesAccessory {
         }
     }
 
+    fun onUnequip(stack: ItemStack, owner: LivingEntity)
+
     fun tick(stack: ItemStack, owner: LivingEntity)
 }

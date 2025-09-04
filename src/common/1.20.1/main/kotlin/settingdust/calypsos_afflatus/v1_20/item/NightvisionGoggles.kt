@@ -8,10 +8,16 @@ import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.item.NightvisionGogglesAccessory
 
 class NightvisionGogglesAccessory : NightvisionGogglesAccessory {
+    override fun onUnequip(stack: ItemStack, owner: LivingEntity) {
+        owner.removeEffect(MobEffects.NIGHT_VISION)
+    }
+
     override fun tick(stack: ItemStack, owner: LivingEntity) {
-        if (stack.damageValue >= stack.maxDamage) return
-        if (owner.addEffect(MobEffectInstance(MobEffects.NIGHT_VISION, 2))) {
-            stack.hurt(1, owner.random, owner as? ServerPlayer)
+        if (stack.damageValue >= stack.maxDamage) {
+            owner.removeEffect(MobEffects.NIGHT_VISION)
+            return
         }
+        owner.addEffect(MobEffectInstance(MobEffects.NIGHT_VISION, -1, 0, false, false))
+        stack.hurt(1, owner.random, owner as? ServerPlayer)
     }
 }
