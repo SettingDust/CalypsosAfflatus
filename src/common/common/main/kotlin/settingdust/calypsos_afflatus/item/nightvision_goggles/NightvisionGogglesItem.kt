@@ -3,6 +3,7 @@ package settingdust.calypsos_afflatus.item.nightvision_goggles
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen
 import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.CalypsosAfflatusKeyBindings
@@ -34,6 +35,19 @@ object NightvisionGogglesItem {
                 || hoveredSlot.item.item !== CalypsosAfflatusItems.NIGHTVISION_GOGGLES
             ) return@onKeyPressedInScreen
             NightvisionGogglesNetworking.c2sSwitchMode(if (screen is CreativeModeInventoryScreen) hoveredSlot.containerSlot else hoveredSlot.index)
+        }
+
+        LoaderAdapter.onLivingEntityTick { entity ->
+            val stack = entity.getItemBySlot(EquipmentSlot.HEAD)
+            if (!stack.`is`(CalypsosAfflatusItems.NIGHTVISION_GOGGLES)) return@onLivingEntityTick
+            NightvisionGogglesAccessory.tick(stack, entity)
+        }
+
+        LoaderAdapter.onEquipmentChanged { entity, slot, from, to ->
+            if (slot != EquipmentSlot.HEAD) return@onEquipmentChanged
+            if (!from.`is`(CalypsosAfflatusItems.NIGHTVISION_GOGGLES)) return@onEquipmentChanged
+            if (to.`is`(CalypsosAfflatusItems.NIGHTVISION_GOGGLES)) return@onEquipmentChanged
+            NightvisionGogglesAccessory.onUnequip(from, entity)
         }
     }
 }

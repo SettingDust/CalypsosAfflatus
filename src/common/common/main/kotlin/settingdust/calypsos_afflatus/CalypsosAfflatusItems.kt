@@ -8,9 +8,7 @@ import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
 
 interface CalypsosAfflatusItems {
     companion object : CalypsosAfflatusItems {
-        val NIGHTVISION_GOGGLES by lazy {
-            BuiltInRegistries.ITEM.get(CalypsosAfflatusKeys.NIGHTVISION_GOGGLES)
-        }
+        val NIGHTVISION_GOGGLES by lazy { BuiltInRegistries.ITEM.get(CalypsosAfflatusKeys.NIGHTVISION_GOGGLES) }
 
         private val implementations = ServiceLoaderUtil.findServices<CalypsosAfflatusItems>()
 
