@@ -14,7 +14,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.adapter.AccessoryIntegration
-import settingdust.calypsos_afflatus.item.NightvisionGogglesAccessory
+import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesAccessory
 
 class AccessoriesAccessoryAdapter : AccessoryIntegration {
     object Renderer : AccessoryRenderer {

@@ -6,9 +6,9 @@ import net.minecraft.world.item.Item
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.CalypsosAfflatusKeys
 import settingdust.calypsos_afflatus.adapter.LoaderAdapter.Companion.creativeTab
-import settingdust.calypsos_afflatus.item.NightvisionGogglesAccessory
+import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesAccessory
 import settingdust.calypsos_afflatus.util.AccessoryRenderer
-import settingdust.calypsos_afflatus.v1_20.item.NightvisionGogglesItem
+import settingdust.calypsos_afflatus.v1_20.item.nightvision_goggles.NightvisionGogglesItem
 
 class CalypsosAfflatusItems : CalypsosAfflatusItems {
     override fun registerItems(register: (ResourceLocation, Item) -> Unit) {

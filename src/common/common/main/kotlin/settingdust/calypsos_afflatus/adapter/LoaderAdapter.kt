@@ -1,5 +1,7 @@
 package settingdust.calypsos_afflatus.adapter
 
+import net.minecraft.client.KeyMapping
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
@@ -13,4 +15,6 @@ interface LoaderAdapter {
     fun isModLoaded(modId: String): Boolean
 
     fun <T : Item> T.creativeTab(key: ResourceKey<CreativeModeTab>)
+
+    fun onKeyPressedInScreen(key: KeyMapping, callback: (screen: Screen) -> Unit)
 }

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems;
 import settingdust.calypsos_afflatus.adapter.AccessoryIntegration;
-import settingdust.calypsos_afflatus.item.NightvisionGogglesItem;
+import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesItem;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {

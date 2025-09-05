@@ -1,8 +1,13 @@
 package settingdust.calypsos_afflatus.forge.adapter
 
+import com.mojang.blaze3d.platform.InputConstants
+import net.minecraft.client.KeyMapping
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
+import net.minecraftforge.client.event.ScreenEvent
+import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent
 import net.minecraftforge.fml.loading.FMLLoader
 import net.minecraftforge.fml.loading.LoadingModList
@@ -18,6 +23,14 @@ class LoaderAdapter : LoaderAdapter {
     override fun <T : Item> T.creativeTab(key: ResourceKey<CreativeModeTab>) {
         MOD_BUS.addListener<BuildCreativeModeTabContentsEvent> { event ->
             if (event.tabKey == key) event.accept(this)
+        }
+    }
+
+    override fun onKeyPressedInScreen(key: KeyMapping, callback: (screen: Screen) -> Unit) {
+        MinecraftForge.EVENT_BUS.addListener<ScreenEvent.KeyPressed> { event ->
+            if (key.isActiveAndMatches(InputConstants.getKey(event.keyCode, event.scanCode))) {
+                callback(event.screen)
+            }
         }
     }
 }
