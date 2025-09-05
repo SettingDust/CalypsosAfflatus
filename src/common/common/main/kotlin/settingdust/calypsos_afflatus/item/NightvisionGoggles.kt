@@ -15,6 +15,21 @@ import settingdust.calypsos_afflatus.util.AccessoryRenderer
 import settingdust.calypsos_afflatus.util.AccessoryRenderer.Companion.transformToModelPart
 import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
 
+interface NightvisionGogglesAdapter {
+    companion object : NightvisionGogglesAdapter by ServiceLoaderUtil.findService<NightvisionGogglesAdapter>()
+
+    enum class Mode(val isEnabled: (ItemStack, LivingEntity) -> Boolean) {
+        AUTO({ _, entity ->
+            val brightness = entity.level().getRawBrightness(entity.blockPosition(), 0)
+            brightness >= 8
+        }),
+        ON({ _, _ -> true }),
+        OFF({ _, _ -> false });
+    }
+
+    var ItemStack.mode: Mode?
+}
+
 object NightvisionGogglesItem {
     val properties = Item.Properties().stacksTo(1).durability(1800)
 
@@ -26,10 +41,10 @@ object NightvisionGogglesItem {
     @Suppress("SimplifyBooleanWithConstants")
     fun MobEffectInstance?.isFromAccessory() =
         this != null
-                && amplifier == this@NightvisionGogglesItem.amplifier
-                && endsWithin(duration)
-                && isVisible == this@NightvisionGogglesItem.visible
-                && isAmbient == this@NightvisionGogglesItem.ambient
+                && amplifier == NightvisionGogglesItem.amplifier
+                && endsWithin(NightvisionGogglesItem.duration)
+                && isVisible == NightvisionGogglesItem.visible
+                && isAmbient == NightvisionGogglesItem.ambient
 }
 
 interface NightvisionGogglesAccessory {
