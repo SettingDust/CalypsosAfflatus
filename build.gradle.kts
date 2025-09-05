@@ -139,7 +139,9 @@ cloche {
     }
 
     val commons = mapOf(
-        "1.20.1" to common("common:1.20.1"),
+        "1.20.1" to common("common:1.20.1") {
+            mixins.from("src/common/1.20.1/main/resources/$id.1_20.mixins.json")
+        },
         "1.21.1" to common("common:1.21.1"),
     )
 
@@ -435,7 +437,10 @@ cloche {
         dependsOn(mainCommon, commons.getValue(minecraftVersion.get()))
 
         runs {
-            client()
+            client {
+                jvmVersion = minecraftVersion.map { mcVersionToJavaVersion[it]!!.majorVersion.toInt() }
+                jvmArguments("-Dmixin.debug.verbose=true", "-Dmixin.debug.export=true")
+            }
         }
 
         mappings {

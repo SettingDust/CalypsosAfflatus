@@ -1,13 +1,12 @@
 package settingdust.calypsos_afflatus.item
 
 import com.mojang.blaze3d.vertex.PoseStack
-import io.wispforest.accessories.api.Accessory
-import io.wispforest.accessories.api.slot.SlotReference
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.HumanoidModel
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
@@ -16,7 +15,22 @@ import settingdust.calypsos_afflatus.util.AccessoryRenderer
 import settingdust.calypsos_afflatus.util.AccessoryRenderer.Companion.transformToModelPart
 import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
 
-class NightvisionGogglesItem : Item(Properties().stacksTo(1).durability(1800))
+object NightvisionGogglesItem {
+    val properties = Item.Properties().stacksTo(1).durability(1800)
+
+    const val duration = 2 * 20
+    const val amplifier = 0
+    const val ambient = false
+    const val visible = true
+
+    @Suppress("SimplifyBooleanWithConstants")
+    fun MobEffectInstance?.isFromAccessory() =
+        this != null
+                && amplifier == this@NightvisionGogglesItem.amplifier
+                && endsWithin(duration)
+                && isVisible == this@NightvisionGogglesItem.visible
+                && isAmbient == this@NightvisionGogglesItem.ambient
+}
 
 interface NightvisionGogglesAccessory {
     companion object :
@@ -49,12 +63,6 @@ interface NightvisionGogglesAccessory {
                 0
             )
             poseStack.popPose()
-        }
-    }
-
-    object Accessories : Accessory {
-        override fun tick(stack: ItemStack, slot: SlotReference) {
-            NightvisionGogglesAccessory.tick(stack, slot.entity())
         }
     }
 
