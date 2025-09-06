@@ -16,7 +16,7 @@ import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.adapter.AccessoryIntegration
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesAccessory
 
-class AccessoriesAccessoryAdapter : AccessoryIntegration {
+class AccessoriesAccessoryIntegration : AccessoryIntegration {
     object Renderer : AccessoryRenderer {
         override fun <M : LivingEntity> render(
             stack: ItemStack,

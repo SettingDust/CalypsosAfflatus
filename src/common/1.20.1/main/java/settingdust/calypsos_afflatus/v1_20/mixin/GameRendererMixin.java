@@ -14,7 +14,7 @@ import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGoggles
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
     @ModifyReturnValue(method = "getNightVisionScale", at = @At("RETURN"))
-    private static float getNightVisionScale(float original, LivingEntity entity, float nanoTime) {
+    private static float calypsos_afflatus$getNightVisionScale(float original, LivingEntity entity, float nanoTime) {
         var effect = entity.getEffect(MobEffects.NIGHT_VISION);
         var equipped = AccessoryIntegration.Companion.getEquipped(
                 entity,

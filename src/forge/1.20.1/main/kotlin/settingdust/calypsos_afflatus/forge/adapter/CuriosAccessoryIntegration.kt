@@ -18,7 +18,7 @@ import top.theillusivec4.curios.api.client.ICurioRenderer
 import top.theillusivec4.curios.api.type.capability.ICurioItem
 import kotlin.jvm.optionals.getOrNull
 
-class CuriosAccessoryAdapter : AccessoryIntegration {
+class CuriosAccessoryIntegration : AccessoryIntegration {
     object Renderer : ICurioRenderer {
         override fun <T : LivingEntity, M : EntityModel<T>> render(
             stack: ItemStack,
