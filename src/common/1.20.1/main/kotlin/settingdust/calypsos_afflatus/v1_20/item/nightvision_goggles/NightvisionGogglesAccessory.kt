@@ -21,7 +21,7 @@ class NightvisionGogglesAccessory : NightvisionGogglesAccessory {
 
     override fun tick(stack: ItemStack, owner: LivingEntity) {
         if (stack.mode == null) stack.mode = NightvisionGogglesModeHandler.Mode.AUTO
-        if (stack.damageValue >= stack.maxDamage && !stack.mode!!.isEnabled(stack, owner)) {
+        if (stack.damageValue >= stack.maxDamage || !stack.mode!!.isEnabled(stack, owner)) {
             val effect = owner.getEffect(MobEffects.NIGHT_VISION)
             if (effect.isFromAccessory()) owner.removeEffect(MobEffects.NIGHT_VISION)
             return
@@ -32,7 +32,8 @@ class NightvisionGogglesAccessory : NightvisionGogglesAccessory {
                 NightvisionGogglesItem.duration,
                 NightvisionGogglesItem.amplifier,
                 NightvisionGogglesItem.ambient,
-                NightvisionGogglesItem.visible
+                NightvisionGogglesItem.visible,
+                NightvisionGogglesItem.shouIcon
             )
         )
         stack.hurt(1, owner.random, owner as? ServerPlayer)

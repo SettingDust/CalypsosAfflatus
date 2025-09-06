@@ -13,7 +13,7 @@ interface NightvisionGogglesNetworking {
             if (stack.item === CalypsosAfflatusItems.NIGHTVISION_GOGGLES) {
                 stack.mode =
                     NightvisionGogglesModeHandler.Mode.entries[
-                        stack.mode?.ordinal?.let { (it + 1) % NightvisionGogglesModeHandler.Mode.entries.size } ?: 0
+                        stack.mode?.ordinal?.let { (it - 1 + NightvisionGogglesModeHandler.Mode.entries.size) % NightvisionGogglesModeHandler.Mode.entries.size } ?: (NightvisionGogglesModeHandler.Mode.entries.size - 1)
                     ]
                 slot.setChanged()
             }

@@ -14,6 +14,7 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesAccessory
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesItem
+import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesItem.appendTooltip
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesModeHandler
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesModeHandler.Companion.mode
 
@@ -24,13 +25,7 @@ class NightvisionGogglesItem : Item(NightvisionGogglesItem.properties), Equipabl
         components: MutableList<Component>,
         isAdvanced: TooltipFlag
     ) {
-        if (stack.mode == null) stack.mode = NightvisionGogglesModeHandler.Mode.AUTO
-        components.add(
-            Component.translatable(
-                "tooltip.calypsos_afflatus.nightvision_goggles.mode",
-                Component.translatable("tooltip.calypsos_afflatus.nightvision_goggles.mode.${stack.mode!!.name.lowercase()}")
-            )
-        )
+        components.appendTooltip(stack)
     }
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {

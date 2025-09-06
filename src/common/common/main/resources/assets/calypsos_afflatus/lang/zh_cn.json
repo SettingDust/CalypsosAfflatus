@@ -1,0 +1,13 @@
+{
+  "item.calypsos_afflatus.nightvision_goggles": "夜视护目镜",
+  "item.calypsos_afflatus.nightvision_goggles.tooltip.description": "§7佩戴后提供%1$s§7，需装填%2$s",
+  "item.calypsos_afflatus.nightvision_goggles.tooltip.mode": "§7[%1$s§7|%2$s§7|%3$s§7] §8- 按§7[%4$s§7]切换模式",
+  "item.calypsos_afflatus.nightvision_goggles.mode.auto": "自动",
+  "item.calypsos_afflatus.nightvision_goggles.mode.on": "开启",
+  "item.calypsos_afflatus.nightvision_goggles.mode.off": "关闭",
+  "item.calypsos_afflatus.nightvision_goggles.tooltip.expand.0": "§7+在物品栏中，拿起填充物在护目镜上方右键来填充它",
+  "item.calypsos_afflatus.nightvision_goggles.tooltip.expand.1": "§7+可填充：%s %s %s",
+  "item.calypsos_afflatus.nightvision_goggles.tooltip.expand.2": "§7+自动模式：只有当你在足够黑暗的时候，才会启用",
+  "item.calypsos_afflatus.nightvision_goggles.tooltip.expand.3": "§7+开启时每秒消耗1点耐久，不会彻底损坏",
+  "tooltip.calypsos_afflatus.expand": "§8按住 §7[Shift] §8查看更多信息 "
+}

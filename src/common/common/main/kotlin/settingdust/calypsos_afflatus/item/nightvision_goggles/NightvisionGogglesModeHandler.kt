@@ -1,5 +1,6 @@
 package settingdust.calypsos_afflatus.item.nightvision_goggles
 
+import net.minecraft.ChatFormatting
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
@@ -7,13 +8,13 @@ import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
 interface NightvisionGogglesModeHandler {
     companion object : NightvisionGogglesModeHandler by ServiceLoaderUtil.findService<NightvisionGogglesModeHandler>()
 
-    enum class Mode(val isEnabled: (ItemStack, LivingEntity) -> Boolean) {
+    enum class Mode(val isEnabled: (ItemStack, LivingEntity) -> Boolean, val color: ChatFormatting) {
         AUTO({ _, entity ->
             val brightness = entity.level().getRawBrightness(entity.blockPosition(), 0)
             brightness >= 8
-        }),
-        ON({ _, _ -> true }),
-        OFF({ _, _ -> false });
+        }, ChatFormatting.GOLD),
+        ON({ _, _ -> true }, ChatFormatting.GREEN),
+        OFF({ _, _ -> false }, ChatFormatting.RED);
     }
 
     var ItemStack.mode: Mode?
