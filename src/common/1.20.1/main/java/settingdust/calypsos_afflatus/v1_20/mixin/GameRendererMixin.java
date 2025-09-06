@@ -9,14 +9,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems;
 import settingdust.calypsos_afflatus.adapter.AccessoryIntegration;
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesItem;
+import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesModeHandler;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
     @ModifyReturnValue(method = "getNightVisionScale", at = @At("RETURN"))
     private static float getNightVisionScale(float original, LivingEntity entity, float nanoTime) {
         var effect = entity.getEffect(MobEffects.NIGHT_VISION);
-        if (!AccessoryIntegration.Companion.isEquipped(entity, CalypsosAfflatusItems.Companion.getNIGHTVISION_GOGGLES())
-                || !NightvisionGogglesItem.INSTANCE.isFromAccessory(effect)) {
+        var equipped = AccessoryIntegration.Companion.getEquipped(
+                entity,
+                CalypsosAfflatusItems.Companion.getNIGHTVISION_GOGGLES());
+        if (equipped == null
+                || !NightvisionGogglesItem.INSTANCE.isFromAccessory(effect)
+                || !NightvisionGogglesModeHandler.Companion.getMode(equipped).isEnabled().invoke(equipped, entity)) {
             return original;
         }
         return 1.0f;

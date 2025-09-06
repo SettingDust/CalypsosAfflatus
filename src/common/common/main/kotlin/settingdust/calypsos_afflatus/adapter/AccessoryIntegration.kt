@@ -3,6 +3,7 @@ package settingdust.calypsos_afflatus.adapter
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.util.ServiceLoaderUtil
 
 interface AccessoryIntegration {
@@ -21,16 +22,18 @@ interface AccessoryIntegration {
             }
         }
 
-        override fun isEquipped(entity: LivingEntity, item: Item): Boolean {
+        override fun getEquipped(entity: LivingEntity, item: Item): ItemStack? {
             for (slot in EquipmentSlot.entries) {
-                if (entity.getItemBySlot(slot).`is`(item)) {
-                    return true
+                val stack = entity.getItemBySlot(slot)
+                if (stack.`is`(item)) {
+                    return stack
                 }
             }
             for (adapter in services) {
-                if (adapter.isEquipped(entity, item)) return true
+                val equipped = adapter.getEquipped(entity, item)
+                if (equipped != null) return equipped
             }
-            return false
+            return null
         }
     }
 
@@ -38,5 +41,5 @@ interface AccessoryIntegration {
 
     fun init()
 
-    fun isEquipped(entity: LivingEntity, item: Item): Boolean
+    fun getEquipped(entity: LivingEntity, item: Item): ItemStack?
 }

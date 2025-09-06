@@ -16,6 +16,7 @@ import top.theillusivec4.curios.api.SlotContext
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry
 import top.theillusivec4.curios.api.client.ICurioRenderer
 import top.theillusivec4.curios.api.type.capability.ICurioItem
+import kotlin.jvm.optionals.getOrNull
 
 class CuriosAccessoryAdapter : AccessoryIntegration {
     object Renderer : ICurioRenderer {
@@ -58,6 +59,6 @@ class CuriosAccessoryAdapter : AccessoryIntegration {
         }
     }
 
-    override fun isEquipped(entity: LivingEntity, item: Item): Boolean =
-        CuriosApi.getCuriosInventory(entity).map { it.isEquipped(item) }.orElse(false)
+    override fun getEquipped(entity: LivingEntity, item: Item) =
+        CuriosApi.getCuriosInventory(entity).resolve().flatMap { it.findFirstCurio(item) }.getOrNull()?.stack
 }

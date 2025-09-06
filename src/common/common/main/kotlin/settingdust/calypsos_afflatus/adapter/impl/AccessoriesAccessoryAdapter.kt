@@ -44,7 +44,7 @@ class AccessoriesAccessoryAdapter : AccessoryIntegration {
 
     override val modId = "accessories"
     override fun init() {
-        AccessoriesAPI.registerAccessory(CalypsosAfflatusItems.NIGHTVISION_GOGGLES, object  : Accessory {
+        AccessoriesAPI.registerAccessory(CalypsosAfflatusItems.NIGHTVISION_GOGGLES, object : Accessory {
             override fun tick(stack: ItemStack, slot: SlotReference) {
                 NightvisionGogglesAccessory.tick(stack, slot.entity())
             }
@@ -53,5 +53,6 @@ class AccessoriesAccessoryAdapter : AccessoryIntegration {
         AccessoriesRendererRegistry.registerRenderer(CalypsosAfflatusItems.NIGHTVISION_GOGGLES) { Renderer }
     }
 
-    override fun isEquipped(entity: LivingEntity, item: Item) = AccessoriesCapability.get(entity)?.isEquipped(item) == true
+    override fun getEquipped(entity: LivingEntity, item: Item) =
+        AccessoriesCapability.get(entity)?.getFirstEquipped(item)?.stack()
 }
