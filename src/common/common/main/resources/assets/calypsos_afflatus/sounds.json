@@ -1,0 +1,18 @@
+{
+  "ui.mode_switch": {
+    "sounds": [
+      "calypsos_afflatus:ui/mode_switch0",
+      "calypsos_afflatus:ui/mode_switch1"
+    ]
+  },
+  "ui.expand": {
+    "sounds": [
+      "calypsos_afflatus:ui/expand"
+    ]
+  },
+  "ui.collapse": {
+    "sounds": [
+      "calypsos_afflatus:ui/collapse"
+    ]
+  }
+}

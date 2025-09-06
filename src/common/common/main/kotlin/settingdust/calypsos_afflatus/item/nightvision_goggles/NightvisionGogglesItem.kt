@@ -7,13 +7,13 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.CalypsosAfflatusKeyBindings
+import settingdust.calypsos_afflatus.CalypsosAfflatusSoundEvents
 import settingdust.calypsos_afflatus.adapter.LoaderAdapter
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesModeHandler.Companion.mode
 import settingdust.calypsos_afflatus.mixin.AbstractContainerScreenAccessor
@@ -37,7 +37,7 @@ object NightvisionGogglesItem {
                 || !hoveredSlot.hasItem()
                 || hoveredSlot.item.item !== CalypsosAfflatusItems.NIGHTVISION_GOGGLES
             ) return@onKeyPressedInScreen
-            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.25f))
+            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CalypsosAfflatusSoundEvents.UI_MODE_SWITCH, 1f, 1f))
             NightvisionGogglesNetworking.c2sSwitchMode(if (screen is CreativeModeInventoryScreen) hoveredSlot.containerSlot else hoveredSlot.index)
         }
 
@@ -85,13 +85,13 @@ object NightvisionGogglesItem {
         )
         if (LoaderAdapter.isClient && !Screen.hasShiftDown()) {
             if (expanded) {
-                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.25f))
+                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CalypsosAfflatusSoundEvents.UI_COLLAPSE, 1f, 1f))
             }
             expanded = false
             add(Component.translatable("tooltip.calypsos_afflatus.expand"))
         } else {
             if (LoaderAdapter.isClient && !expanded) {
-                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 0.25f))
+                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CalypsosAfflatusSoundEvents.UI_EXPAND, 1f, 1f))
                 expanded = true
             }
             add(Component.translatable("item.calypsos_afflatus.nightvision_goggles.tooltip.expand.0"))

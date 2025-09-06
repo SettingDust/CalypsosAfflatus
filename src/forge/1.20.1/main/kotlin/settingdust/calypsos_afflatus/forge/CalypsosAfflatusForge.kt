@@ -11,6 +11,7 @@ import net.minecraftforge.registries.RegisterEvent
 import settingdust.calypsos_afflatus.CalypsosAfflatus
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.CalypsosAfflatusKeyBindings
+import settingdust.calypsos_afflatus.CalypsosAfflatusSoundEvents
 import settingdust.calypsos_afflatus.adapter.Entrypoint
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
 
@@ -29,6 +30,10 @@ object CalypsosAfflatusForge {
                 when (event.registryKey) {
                     Registries.ITEM -> CalypsosAfflatusItems.registerItems { id, value ->
                         event.register(Registries.ITEM, id) { value }
+                    }
+
+                    Registries.SOUND_EVENT -> CalypsosAfflatusSoundEvents.registerSoundEvents { id, value ->
+                        event.register(Registries.SOUND_EVENT, id) { value(id) }
                     }
                 }
             }
