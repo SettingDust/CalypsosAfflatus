@@ -5,6 +5,9 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.ClickAction
+import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -24,4 +27,6 @@ interface LoaderAdapter {
     fun onLivingEntityTick(callback: (entity: LivingEntity) -> Unit)
 
     fun onEquipmentChanged(callback: (entity: LivingEntity, slot: EquipmentSlot, from: ItemStack, to: ItemStack) -> Unit)
+
+    fun onItemStackedOnOther(callback: (player: Player, carriedItem: ItemStack, stackedOnItem: ItemStack, slot: Slot, clickAction: ClickAction) -> Boolean)
 }

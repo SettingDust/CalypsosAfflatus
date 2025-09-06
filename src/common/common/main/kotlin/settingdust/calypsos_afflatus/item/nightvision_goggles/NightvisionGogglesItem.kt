@@ -9,8 +9,10 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.inventory.ClickAction
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import settingdust.calypsos_afflatus.CalypsosAfflatusItems
 import settingdust.calypsos_afflatus.CalypsosAfflatusKeyBindings
 import settingdust.calypsos_afflatus.CalypsosAfflatusSoundEvents
@@ -29,6 +31,12 @@ object NightvisionGogglesItem {
 
     private var expanded = false
 
+    val DURABILITY_PROVIDERS = mapOf(
+        Items.SPIDER_EYE to 180,
+        Items.FERMENTED_SPIDER_EYE to 540,
+        Items.GLOWSTONE to 540
+    )
+
     init {
         LoaderAdapter.onKeyPressedInScreen(CalypsosAfflatusKeyBindings.ACCESSORY_MODE) { screen ->
             if (screen !is AbstractContainerScreen<*>) return@onKeyPressedInScreen
@@ -37,7 +45,13 @@ object NightvisionGogglesItem {
                 || !hoveredSlot.hasItem()
                 || hoveredSlot.item.item !== CalypsosAfflatusItems.NIGHTVISION_GOGGLES
             ) return@onKeyPressedInScreen
-            Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CalypsosAfflatusSoundEvents.UI_MODE_SWITCH, 1f, 1f))
+            Minecraft.getInstance().soundManager.play(
+                SimpleSoundInstance.forUI(
+                    CalypsosAfflatusSoundEvents.UI_MODE_SWITCH,
+                    1f,
+                    1f
+                )
+            )
             NightvisionGogglesNetworking.c2sSwitchMode(if (screen is CreativeModeInventoryScreen) hoveredSlot.containerSlot else hoveredSlot.index)
         }
 
@@ -45,6 +59,15 @@ object NightvisionGogglesItem {
             val stack = entity.getItemBySlot(EquipmentSlot.HEAD)
             if (!stack.`is`(CalypsosAfflatusItems.NIGHTVISION_GOGGLES)) return@onLivingEntityTick
             NightvisionGogglesAccessory.tick(stack, entity)
+        }
+
+        LoaderAdapter.onItemStackedOnOther { player, carriedItem, stackedOnItem, slot, clickAction ->
+            if (clickAction !== ClickAction.SECONDARY) return@onItemStackedOnOther false
+            if (!carriedItem.`is`(CalypsosAfflatusItems.NIGHTVISION_GOGGLES)) return@onItemStackedOnOther false
+            val value = DURABILITY_PROVIDERS[stackedOnItem.item] ?: return@onItemStackedOnOther false
+            carriedItem.damageValue -= value
+            stackedOnItem.shrink(1)
+            true
         }
     }
 
@@ -85,13 +108,25 @@ object NightvisionGogglesItem {
         )
         if (LoaderAdapter.isClient && !Screen.hasShiftDown()) {
             if (expanded) {
-                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CalypsosAfflatusSoundEvents.UI_COLLAPSE, 1f, 1f))
+                Minecraft.getInstance().soundManager.play(
+                    SimpleSoundInstance.forUI(
+                        CalypsosAfflatusSoundEvents.UI_COLLAPSE,
+                        1f,
+                        1f
+                    )
+                )
             }
             expanded = false
             add(Component.translatable("tooltip.calypsos_afflatus.expand"))
         } else {
             if (LoaderAdapter.isClient && !expanded) {
-                Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CalypsosAfflatusSoundEvents.UI_EXPAND, 1f, 1f))
+                Minecraft.getInstance().soundManager.play(
+                    SimpleSoundInstance.forUI(
+                        CalypsosAfflatusSoundEvents.UI_EXPAND,
+                        1f,
+                        1f
+                    )
+                )
                 expanded = true
             }
             add(Component.translatable("item.calypsos_afflatus.nightvision_goggles.tooltip.expand.0"))
