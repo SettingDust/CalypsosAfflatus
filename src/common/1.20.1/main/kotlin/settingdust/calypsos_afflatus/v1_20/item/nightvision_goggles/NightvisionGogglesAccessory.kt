@@ -7,23 +7,14 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesAccessory
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesItem
-import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesItem.isFromAccessory
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesModeHandler
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesModeHandler.Companion.mode
 
 class NightvisionGogglesAccessory : NightvisionGogglesAccessory {
-    override fun onUnequip(stack: ItemStack, owner: LivingEntity) {
-        val effect = owner.getEffect(MobEffects.NIGHT_VISION)
-        if (!effect.isFromAccessory()) return
-
-        owner.removeEffect(MobEffects.NIGHT_VISION)
-    }
-
     override fun tick(stack: ItemStack, owner: LivingEntity) {
+        if (owner.level().isClientSide) return
         if (stack.mode == null) stack.mode = NightvisionGogglesModeHandler.Mode.AUTO
         if (stack.damageValue >= stack.maxDamage || !stack.mode!!.isEnabled(stack, owner)) {
-            val effect = owner.getEffect(MobEffects.NIGHT_VISION)
-            if (effect.isFromAccessory()) owner.removeEffect(MobEffects.NIGHT_VISION)
             return
         }
         owner.addEffect(

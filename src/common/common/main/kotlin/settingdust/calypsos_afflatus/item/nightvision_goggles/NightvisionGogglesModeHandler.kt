@@ -10,8 +10,8 @@ interface NightvisionGogglesModeHandler {
 
     enum class Mode(val isEnabled: (ItemStack, LivingEntity) -> Boolean, val color: ChatFormatting) {
         AUTO({ _, entity ->
-            val brightness = entity.level().getRawBrightness(entity.blockPosition(), 0)
-            brightness >= 8
+            val brightness = entity.level().getMaxLocalRawBrightness(entity.blockPosition())
+            brightness < 8
         }, ChatFormatting.GOLD),
         ON({ _, _ -> true }, ChatFormatting.GREEN),
         OFF({ _, _ -> false }, ChatFormatting.RED);

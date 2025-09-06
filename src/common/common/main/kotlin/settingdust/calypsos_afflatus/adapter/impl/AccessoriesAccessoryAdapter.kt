@@ -48,10 +48,6 @@ class AccessoriesAccessoryAdapter : AccessoryIntegration {
             override fun tick(stack: ItemStack, slot: SlotReference) {
                 NightvisionGogglesAccessory.tick(stack, slot.entity())
             }
-
-            override fun onUnequip(stack: ItemStack, slot: SlotReference) {
-                NightvisionGogglesAccessory.onUnequip(stack, slot.entity())
-            }
         })
 
         AccessoriesRendererRegistry.registerRenderer(CalypsosAfflatusItems.NIGHTVISION_GOGGLES) { Renderer }

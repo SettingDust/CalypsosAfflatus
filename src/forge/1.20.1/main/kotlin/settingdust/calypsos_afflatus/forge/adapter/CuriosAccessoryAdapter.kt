@@ -49,11 +49,6 @@ class CuriosAccessoryAdapter : AccessoryIntegration {
             override fun curioTick(slotContext: SlotContext, stack: ItemStack) {
                 NightvisionGogglesAccessory.tick(stack, slotContext.entity)
             }
-
-            override fun onUnequip(slotContext: SlotContext, newStack: ItemStack, stack: ItemStack) {
-                if (newStack.item !== CalypsosAfflatusItems.NIGHTVISION_GOGGLES)
-                    NightvisionGogglesAccessory.onUnequip(stack, slotContext.entity)
-            }
         })
 
         if (LoaderAdapter.isClient) {
