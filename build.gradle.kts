@@ -169,6 +169,9 @@ cloche {
 
                 modImplementation(catalog.accessories.get1().get20().get1().fabric)
                 modImplementation(catalog.trinkets.get1().get20().get1())
+
+                modImplementation(catalog.cardinal.components.get1().get20().get1().base)
+                modImplementation(catalog.cardinal.components.get1().get20().get1().entity)
             }
 
             tasks.named<GenerateFabricModJson>(generateModsManifestTaskName) {
@@ -206,6 +209,9 @@ cloche {
 
                 modImplementation(catalog.accessories.get1().get21().get1().fabric)
                 modImplementation(catalog.trinkets.get1().get21().get1())
+
+                modImplementation(catalog.cardinal.components.get1().get21().get1().base)
+                modImplementation(catalog.cardinal.components.get1().get21().get1().entity)
             }
 
             tasks.named<GenerateFabricModJson>(generateModsManifestTaskName) {

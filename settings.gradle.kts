@@ -19,26 +19,26 @@ object VersionFormats {
 }
 
 object VersionTransformers {
-    val versionDashLoader = { ver: String, loader: String -> "$ver-$loader" }
-    val loaderUnderlineVersion = { ver: String, loader: String -> "${loader}_$ver" }
+    val versionDashLoader = { ver: String, variant: String -> "$ver-$variant" }
+    val loaderUnderlineVersion = { ver: String, variant: String -> "${variant}_$ver" }
 }
 
 object ArtifactTransformers {
     val artifactDashLoaderDashMcVersion =
-        { artifact: String, loader: String, mcVersion: String -> "$artifact-$loader-$mcVersion" }
-    val artifactDashLoader = { artifact: String, loader: String, _: String -> "$artifact-$loader" }
+        { artifact: String, variant: String, mcVersion: String -> "$artifact-$variant-$mcVersion" }
+    val artifactDashLoader = { artifact: String, variant: String, _: String -> "$artifact-$variant" }
 }
 
-open class LoaderConfig(
-    val artifactTransformer: (artifact: String, loader: String, mcVersion: String) -> String = { artifact, _, _ -> artifact },
-    val versionTransformer: (version: String, loader: String) -> String = { ver, _ -> ver }
+open class VariantConfig(
+    val artifactTransformer: (artifact: String, variant: String, mcVersion: String) -> String = { artifact, _, _ -> artifact },
+    val versionTransformer: (version: String, variant: String) -> String = { ver, _ -> ver }
 ) {
-    companion object : LoaderConfig()
+    companion object : VariantConfig()
 }
 
-data class LoaderMapping(
+data class VariantMapping(
     val mcVersion: String,
-    val loaders: Map<String, LoaderConfig>
+    val loaders: Map<String, VariantConfig>
 )
 
 fun VersionCatalogBuilder.modrinth(
@@ -46,7 +46,7 @@ fun VersionCatalogBuilder.modrinth(
     artifact: String = id,
     mcVersionToVersion: Map<String, String>,
     versionFormat: (String, String) -> String = { _, v -> v },
-    mapping: List<LoaderMapping> = emptyList()
+    mapping: List<VariantMapping> = emptyList()
 ) {
     val allLoaders = mapping.flatMap { it.loaders.keys }.toSet()
     val isSingleLoader = allLoaders.size == 1
@@ -93,7 +93,7 @@ fun VersionCatalogBuilder.maven(
     artifact: String = id,
     mcVersionToVersion: Map<String, String>,
     versionFormat: (String, String) -> String = { _, v -> v },
-    mapping: List<LoaderMapping> = emptyList()
+    mapping: List<VariantMapping> = emptyList()
 ) {
     val allLoaders = mapping.flatMap { it.loaders.keys }.toSet()
     val isSingleLoader = allLoaders.size == 1
@@ -147,11 +147,11 @@ dependencyResolutionManagement.versionCatalogs.create("catalog") {
         mcVersionToVersion = mapOf("*" to "0.5.0"),
         versionFormat = { _, v -> v },
         mapping = listOf(
-            LoaderMapping(
+            VariantMapping(
                 "*", mapOf(
-                    "forge" to LoaderConfig(ArtifactTransformers.artifactDashLoader),
-                    "fabric" to LoaderConfig(ArtifactTransformers.artifactDashLoader),
-                    "common" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                    "forge" to VariantConfig(ArtifactTransformers.artifactDashLoader),
+                    "fabric" to VariantConfig(ArtifactTransformers.artifactDashLoader),
+                    "common" to VariantConfig(ArtifactTransformers.artifactDashLoader)
                 )
             )
         )
@@ -167,16 +167,16 @@ dependencyResolutionManagement.versionCatalogs.create("catalog") {
         ),
         versionFormat = VersionFormats.versionPlusMc,
         mapping = listOf(
-            LoaderMapping(
+            VariantMapping(
                 "1.20.1", mapOf(
-                    "neoforge" to LoaderConfig(ArtifactTransformers.artifactDashLoader),
-                    "fabric" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                    "neoforge" to VariantConfig(ArtifactTransformers.artifactDashLoader),
+                    "fabric" to VariantConfig(ArtifactTransformers.artifactDashLoader)
                 )
             ),
-            LoaderMapping(
+            VariantMapping(
                 "1.21.1", mapOf(
-                    "neoforge" to LoaderConfig(ArtifactTransformers.artifactDashLoader),
-                    "fabric" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                    "neoforge" to VariantConfig(ArtifactTransformers.artifactDashLoader),
+                    "fabric" to VariantConfig(ArtifactTransformers.artifactDashLoader)
                 )
             ),
         )
@@ -192,30 +192,53 @@ dependencyResolutionManagement.versionCatalogs.create("catalog") {
         ),
         versionFormat = VersionFormats.versionPlusMc,
         mapping = listOf(
-            LoaderMapping(
+            VariantMapping(
                 "1.20.1", mapOf(
-                    "forge" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                    "forge" to VariantConfig(ArtifactTransformers.artifactDashLoader)
                 )
             ),
-            LoaderMapping(
+            VariantMapping(
                 "1.21.1", mapOf(
-                    "neoforge" to LoaderConfig(ArtifactTransformers.artifactDashLoader)
+                    "neoforge" to VariantConfig(ArtifactTransformers.artifactDashLoader)
                 )
             ),
         )
     )
 
-    maven(
+    modrinth(
         id = "trinkets",
-        group = "dev.emi",
         artifact = "trinkets",
         mcVersionToVersion = mapOf(
             "1.20.1" to "3.7.2",
             "1.21.1" to "3.10.0"
         ),
         mapping = listOf(
-            LoaderMapping("1.20.1", mapOf("fabric" to LoaderConfig)),
-            LoaderMapping("1.21.1", mapOf("fabric" to LoaderConfig)),
+            VariantMapping("1.20.1", mapOf("fabric" to VariantConfig)),
+            VariantMapping("1.21.1", mapOf("fabric" to VariantConfig)),
+        )
+    )
+
+    maven(
+        id = "cardinal-components",
+        group = "dev.onyxstudios.cardinal-components-api",
+        artifact = "cardinal-components",
+        mcVersionToVersion = mapOf(
+            "1.20.1" to "5.2.3",
+            "1.21.1" to "6.1.2"
+        ),
+        mapping = listOf(
+            VariantMapping(
+                "1.20.1", mapOf(
+                    "base" to VariantConfig(ArtifactTransformers.artifactDashLoader),
+                    "entity" to VariantConfig(ArtifactTransformers.artifactDashLoader)
+                )
+            ),
+            VariantMapping(
+                "1.21.1", mapOf(
+                    "base" to VariantConfig(ArtifactTransformers.artifactDashLoader),
+                    "entity" to VariantConfig(ArtifactTransformers.artifactDashLoader)
+                )
+            )
         )
     )
 }

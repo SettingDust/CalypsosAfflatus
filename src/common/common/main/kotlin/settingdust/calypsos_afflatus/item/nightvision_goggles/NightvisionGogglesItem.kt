@@ -42,9 +42,11 @@ object NightvisionGogglesItem {
             if (screen !is AbstractContainerScreen<*>) return@onKeyPressedInScreen
             val hoveredSlot = (screen as AbstractContainerScreenAccessor).hoveredSlot
             if (hoveredSlot == null
+                || hoveredSlot is CreativeModeInventoryScreen.CustomCreativeSlot
                 || !hoveredSlot.hasItem()
                 || hoveredSlot.item.item !== CalypsosAfflatusItems.NIGHTVISION_GOGGLES
             ) return@onKeyPressedInScreen
+            NightvisionGogglesNetworking.c2sSwitchMode(hoveredSlot)
             Minecraft.getInstance().soundManager.play(
                 SimpleSoundInstance.forUI(
                     CalypsosAfflatusSoundEvents.UI_MODE_SWITCH,
@@ -52,7 +54,6 @@ object NightvisionGogglesItem {
                     1f
                 )
             )
-            NightvisionGogglesNetworking.c2sSwitchMode(if (screen is CreativeModeInventoryScreen) hoveredSlot.containerSlot else hoveredSlot.index)
         }
 
         LoaderAdapter.onLivingEntityTick { entity ->
