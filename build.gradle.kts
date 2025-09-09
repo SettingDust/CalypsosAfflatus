@@ -163,7 +163,7 @@ cloche {
         "1.20.1" to common("common:1.20.1") {
             mixins.from("src/common/1.20.1/main/resources/$id.1_20.mixins.json")
         },
-        "1.21.1" to common("common:1.21.1"){
+        "1.21.1" to common("common:1.21.1") {
             mixins.from("src/common/1.21.1/main/resources/$id.1_21.mixins.json")
         },
     )
@@ -294,7 +294,6 @@ cloche {
 
                 val jar = register<Jar>(lowerCamelCaseGradleName(featureName, "jar")) {
                     group = "build"
-                    archiveBaseName = "$id-${featureName.camelToKebabCase()}"
                     archiveClassifier = "fabric"
                     destinationDirectory = intermediateOutputsDirectory
                     dependsOn(generateModJson)
@@ -304,7 +303,6 @@ cloche {
                 val includesJar = register<JarInJar>(lowerCamelCaseGradleName(featureName, "includeJar")) {
                     dependsOn(targets.map { it.includeJarTaskName })
 
-                    archiveBaseName = "$id-${featureName.camelToKebabCase()}"
                     archiveClassifier = "fabric"
                     input = jar.flatMap { it.archiveFile }
                     fromResolutionResults(include)
@@ -591,9 +589,11 @@ tasks {
     }
 
     shadowJar {
-        archiveClassifier = ""
+        enabled = false
+    }
 
-        configurations.empty()
+    val shadowContainersJar by registering(ShadowJar::class) {
+        archiveClassifier = ""
 
         for (task in containerTasks) {
             from(task.map { zipTree(it.archiveFile) })
@@ -624,7 +624,7 @@ tasks {
     }
 
     build {
-        dependsOn(shadowSourcesJar)
+        dependsOn(shadowContainersJar, shadowSourcesJar)
     }
 
     val remapFabricMinecraftIntermediary by registering {
