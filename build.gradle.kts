@@ -163,7 +163,9 @@ cloche {
         "1.20.1" to common("common:1.20.1") {
             mixins.from("src/common/1.20.1/main/resources/$id.1_20.mixins.json")
         },
-        "1.21.1" to common("common:1.21.1"),
+        "1.21.1" to common("common:1.21.1"){
+            mixins.from("src/common/1.21.1/main/resources/$id.1_21.mixins.json")
+        },
     )
 
     run fabric@{
