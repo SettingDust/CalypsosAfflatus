@@ -5,11 +5,9 @@ import earth.terrarium.cloche.INCLUDE_TRANSFORMED_OUTPUT_ATTRIBUTE
 import earth.terrarium.cloche.api.attributes.CompilationAttributes
 import earth.terrarium.cloche.api.attributes.TargetAttributes
 import earth.terrarium.cloche.api.metadata.FabricMetadata
-import earth.terrarium.cloche.api.metadata.ForgeMetadata
 import earth.terrarium.cloche.api.metadata.ModMetadata
 import earth.terrarium.cloche.api.target.*
 import earth.terrarium.cloche.tasks.GenerateFabricModJson
-import earth.terrarium.cloche.tasks.GenerateForgeModsToml
 import groovy.lang.Closure
 import net.msrandom.minecraftcodev.core.utils.lowerCamelCaseGradleName
 import net.msrandom.minecraftcodev.fabric.MinecraftCodevFabricPlugin
@@ -152,9 +150,9 @@ cloche {
         official()
     }
 
-    val mainCommon = common("common:common") {
-        mixins.from(file("src/common/common/main/resources/$id.mixins.json"))
-        accessWideners.from(file("src/common/common/main/resources/$id.accessWidener"))
+    common {
+        mixins.from(file("src/common/main/resources/$id.mixins.json"))
+        accessWideners.from(file("src/common/main/resources/$id.accessWidener"))
 
         dependencies {
             compileOnly("org.spongepowered:mixin:0.8.7")
@@ -488,12 +486,6 @@ cloche {
         }
     }
 
-    commonTargets.all {
-        if (this != mainCommon && this != common()) {
-            dependsOn(mainCommon)
-        }
-    }
-
     targets.withType<ForgeLikeTarget> {
         metadata {
             dependency {
@@ -512,7 +504,7 @@ cloche {
     )
 
     targets.all {
-        dependsOn(mainCommon, commons.getValue(minecraftVersion.get()))
+        dependsOn(commons.getValue(minecraftVersion.get()))
 
         runs {
             client {

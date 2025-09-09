@@ -1,6 +1,6 @@
 package settingdust.calypsos_afflatus.fabric.v1_20.item.nightvision_goggles
 
-import dev.emi.trinkets.TrinketSlot
+import dev.emi.trinkets.CreativeTrinketSlot
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.FabricPacket
 import net.fabricmc.fabric.api.networking.v1.PacketType
@@ -17,18 +17,19 @@ import settingdust.calypsos_afflatus.util.ContainerType
 class NightvisionGogglesNetworking : NightvisionGogglesNetworking {
     override fun c2sSwitchMode(slot: Slot) {
         require(LoaderAdapter.isClient)
+        requireNotNull(TrinketsContainerType)
         val index =
             if (slot is CreativeModeInventoryScreen.SlotWrapper) {
                 slot.containerSlot
             } else {
                 slot.index
             }
-        val type = if (slot is TrinketSlot) {
+        val type = if (slot is CreativeTrinketSlot) {
             TrinketsContainerType.TRINKET_TYPE
         } else {
             ContainerType.NORMAL
         }
-        val data = if (slot is TrinketSlot) {
+        val data = if (slot is CreativeTrinketSlot) {
             TrinketsContainerType.Trinket(slot.type.group, slot.type.name)
         } else {
             ContainerType.Data.Normal

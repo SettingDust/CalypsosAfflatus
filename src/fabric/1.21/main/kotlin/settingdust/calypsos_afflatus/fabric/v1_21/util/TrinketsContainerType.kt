@@ -29,6 +29,8 @@ object TrinketsContainerType {
     }
 
     data class Trinket(val group: String, val slot: String) : ContainerType.Data {
+        override val type = TRINKET_TYPE
+
         companion object {
             val STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8,

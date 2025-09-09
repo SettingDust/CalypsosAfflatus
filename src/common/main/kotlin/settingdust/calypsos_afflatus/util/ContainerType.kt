@@ -27,9 +27,13 @@ interface ContainerType<T : ContainerType.Data> {
 
     interface Data {
         data object Normal : Data {
+            override val type = NORMAL
+
             override fun write(buf: FriendlyByteBuf) {
             }
         }
+
+        val type: String
 
         fun write(buf: FriendlyByteBuf)
     }

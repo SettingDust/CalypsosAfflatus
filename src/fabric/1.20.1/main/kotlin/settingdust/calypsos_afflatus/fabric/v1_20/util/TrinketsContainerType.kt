@@ -27,6 +27,8 @@ object TrinketsContainerType {
     }
 
     data class Trinket(val group: String, val slot: String) : ContainerType.Data {
+        override val type = TRINKET_TYPE
+
         override fun write(buf: FriendlyByteBuf) {
             buf.writeUtf(group)
             buf.writeUtf(slot)
