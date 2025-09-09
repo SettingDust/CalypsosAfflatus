@@ -1,4 +1,4 @@
-package settingdust.calypsos_afflatus.v1_20.item.nightvision_goggles
+package settingdust.calypsos_afflatus.v1_21.item.nightvision_goggles
 
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
@@ -27,6 +27,6 @@ class NightvisionGogglesAccessory : NightvisionGogglesAccessory {
                 NightvisionGogglesItem.shouIcon
             )
         )
-        stack.hurt(1, owner.random, player)
+        stack.hurtAndBreak(1, player.serverLevel(), player) {}
     }
 }

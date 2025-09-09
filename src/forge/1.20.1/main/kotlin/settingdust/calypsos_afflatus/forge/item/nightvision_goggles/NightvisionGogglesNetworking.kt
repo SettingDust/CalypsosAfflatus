@@ -7,6 +7,7 @@ import net.minecraftforge.network.NetworkEvent
 import settingdust.calypsos_afflatus.adapter.LoaderAdapter
 import settingdust.calypsos_afflatus.forge.CalypsosAfflatusNetworking
 import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGogglesNetworking
+import settingdust.calypsos_afflatus.util.ContainerType
 import java.util.function.Supplier
 
 class NightvisionGogglesNetworking : NightvisionGogglesNetworking {
@@ -21,8 +22,8 @@ class NightvisionGogglesNetworking : NightvisionGogglesNetworking {
         CalypsosAfflatusNetworking.CHANNEL.sendToServer(
             C2SSwitchModePacket(
                 index,
-                NightvisionGogglesNetworking.ContainerType.NORMAL,
-                NightvisionGogglesNetworking.ContainerType.Data.Normal
+                ContainerType.NORMAL,
+                ContainerType.Data.Normal
             )
         )
     }
@@ -31,7 +32,7 @@ class NightvisionGogglesNetworking : NightvisionGogglesNetworking {
 data class C2SSwitchModePacket(
     val slotIndex: Int,
     val containerType: String,
-    val data: NightvisionGogglesNetworking.ContainerType.Data
+    val data: ContainerType.Data
 ) {
     companion object {
         fun decode(buf: FriendlyByteBuf): C2SSwitchModePacket {
@@ -42,7 +43,7 @@ data class C2SSwitchModePacket(
             context.get().enqueueWork {
                 NightvisionGogglesNetworking.handleSwitchMode(
                     packet.slotIndex,
-                    NightvisionGogglesNetworking.ContainerType.ALL.getValue(packet.containerType),
+                    ContainerType.ALL.getValue(packet.containerType),
                     context.get().sender!!,
                     packet.data
                 )
@@ -53,7 +54,7 @@ data class C2SSwitchModePacket(
     constructor(slotIndex: Int, containerType: String, buf: FriendlyByteBuf) : this(
         slotIndex,
         containerType,
-        NightvisionGogglesNetworking.ContainerType.ALL[containerType]!!.dataSerializer(buf)
+        ContainerType.ALL[containerType]!!.dataSerializer(buf)
     )
 
     fun encode(buf: FriendlyByteBuf) {

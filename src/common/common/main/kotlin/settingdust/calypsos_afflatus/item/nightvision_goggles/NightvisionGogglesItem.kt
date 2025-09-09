@@ -21,7 +21,7 @@ import settingdust.calypsos_afflatus.item.nightvision_goggles.NightvisionGoggles
 import settingdust.calypsos_afflatus.mixin.AbstractContainerScreenAccessor
 
 object NightvisionGogglesItem {
-    val properties = Item.Properties().stacksTo(1).durability(1800)
+    val properties = Item.Properties().stacksTo(1).durability(1800 + 1)
 
     const val duration = 2 * 20
     const val amplifier = 0

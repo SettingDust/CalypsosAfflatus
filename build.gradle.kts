@@ -1,13 +1,20 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import earth.terrarium.cloche.INCLUDE_TRANSFORMED_OUTPUT_ATTRIBUTE
+import earth.terrarium.cloche.api.attributes.CompilationAttributes
+import earth.terrarium.cloche.api.attributes.TargetAttributes
+import earth.terrarium.cloche.api.metadata.FabricMetadata
+import earth.terrarium.cloche.api.metadata.ForgeMetadata
 import earth.terrarium.cloche.api.metadata.ModMetadata
 import earth.terrarium.cloche.api.target.*
 import earth.terrarium.cloche.tasks.GenerateFabricModJson
+import earth.terrarium.cloche.tasks.GenerateForgeModsToml
 import groovy.lang.Closure
 import net.msrandom.minecraftcodev.core.utils.lowerCamelCaseGradleName
 import net.msrandom.minecraftcodev.fabric.MinecraftCodevFabricPlugin
-import net.msrandom.minecraftcodev.includes.IncludesJar
+import net.msrandom.minecraftcodev.fabric.task.JarInJar
+import net.msrandom.minecraftcodev.forge.task.JarJar
 import org.gradle.jvm.tasks.Jar
 
 
@@ -22,7 +29,7 @@ plugins {
 
     id("com.gradleup.shadow") version "9.0.2"
 
-    id("earth.terrarium.cloche") version "0.13.4-dust"
+    id("earth.terrarium.cloche") version "0.13.4"
 }
 
 val archive_name: String by rootProject.properties
@@ -104,6 +111,22 @@ repositories {
 
     mavenLocal()
 }
+
+class MinecraftVersionCompatibilityRule : AttributeCompatibilityRule<String> {
+    override fun execute(details: CompatibilityCheckDetails<String>) {
+        details.compatible()
+    }
+}
+
+dependencies {
+    attributesSchema {
+        attribute(TargetAttributes.MINECRAFT_VERSION) {
+            compatibilityRules.add(MinecraftVersionCompatibilityRule::class)
+        }
+    }
+}
+
+val containerTasks = mutableSetOf<TaskProvider<out Jar>>()
 
 cloche {
     metadata {
@@ -205,7 +228,7 @@ cloche {
             }
 
             dependencies {
-                fabricApi("0.116.5")
+                fabricApi("0.116.6")
 
                 modImplementation(catalog.accessories.get1().get21().get1().fabric)
                 modImplementation(catalog.trinkets.get1().get21().get1())
@@ -231,9 +254,19 @@ cloche {
             }
         }
 
-        fabric("container:fabric") {
-            minecraftVersion = "1.20.1"
+        run container@{
+            val featureName = "containerFabric"
+            val metadataDirectory = project.layout.buildDirectory.dir("generated")
+                .map { it.dir("metadata").dir(featureName) }
+            val include = configurations.register(lowerCamelCaseGradleName(featureName, "include")) {
+                isCanBeResolved = true
+                isTransitive = false
 
+                attributes {
+                    attribute(INCLUDE_TRANSFORMED_OUTPUT_ATTRIBUTE, true)
+                    attribute(CompilationAttributes.DATA, false)
+                }
+            }
             val targets = setOf(fabric1201, fabric121)
 
             dependencies {
@@ -246,16 +279,41 @@ cloche {
                 }
             }
 
-            tasks.named<IncludesJar>(includeJarTaskName) {
-                archiveClassifier = target.loaderName
+            tasks {
+                val generateModJson =
+                    register<GenerateFabricModJson>(lowerCamelCaseGradleName(featureName, "generateModJson")) {
+                        commonMetadata = objects.newInstance<ModMetadata>().apply {
+                            modId.value(cloche.metadata.modId)
+                            license.value(cloche.metadata.license)
+                            dependencies.value(cloche.metadata.dependencies)
+                        }
+                        targetMetadata = objects.newInstance(FabricMetadata::class.java)
+                        loaderDependencyVersion = "0.16"
+                        output.set(metadataDirectory.map { it.file("fabric.mod.json") })
+                    }
 
-                dependsOn(targets.map { it.includeJarTaskName })
-            }
+                val jar = register<Jar>(lowerCamelCaseGradleName(featureName, "jar")) {
+                    group = "build"
+                    archiveBaseName = "$id-${featureName.camelToKebabCase()}"
+                    archiveClassifier = "fabric"
+                    destinationDirectory = intermediateOutputsDirectory
+                    dependsOn(generateModJson)
+                    from(metadataDirectory)
+                }
 
-            tasks.named<GenerateFabricModJson>(generateModsManifestTaskName) {
-                commonMetadata = objects.newInstance<ModMetadata>().apply {
-                    modId.value(cloche.metadata.modId)
-                    license.value(cloche.metadata.license)
+                val includesJar = register<JarInJar>(lowerCamelCaseGradleName(featureName, "includeJar")) {
+                    dependsOn(targets.map { it.includeJarTaskName })
+
+                    archiveBaseName = "$id-${featureName.camelToKebabCase()}"
+                    archiveClassifier = "fabric"
+                    input = jar.flatMap { it.archiveFile }
+                    fromResolutionResults(include)
+                }
+
+                containerTasks += includesJar
+
+                build {
+                    dependsOn(includesJar)
                 }
             }
         }
@@ -264,8 +322,6 @@ cloche {
             loaderVersion = "0.16.14"
 
             includedClient()
-
-            if (isContainer()) return@withType
 
             dependsOn(fabricCommon)
 
@@ -370,9 +426,19 @@ cloche {
             }
         }
 
-        neoforge("container:neoforge") {
-            minecraftVersion = "1.21.1"
+        run container@{
+            val featureName = "containerNeoforge"
+            val metadataDirectory = project.layout.buildDirectory.dir("generated")
+                .map { it.dir("metadata").dir(featureName) }
+            val include = configurations.register(lowerCamelCaseGradleName(featureName, "include")) {
+                isCanBeResolved = true
+                isTransitive = false
 
+                attributes {
+                    attribute(INCLUDE_TRANSFORMED_OUTPUT_ATTRIBUTE, true)
+                    attribute(CompilationAttributes.DATA, false)
+                }
+            }
             val targets = setOf(neoforge121)
 
             dependencies {
@@ -385,17 +451,33 @@ cloche {
                 }
             }
 
-            tasks.named<IncludesJar>(includeJarTaskName) {
-                archiveClassifier = target.loaderName
+            tasks {
+                val jar = register<Jar>(lowerCamelCaseGradleName(featureName, "jar")) {
+                    group = "build"
+                    archiveBaseName = "$id-${featureName.camelToKebabCase()}"
+                    archiveClassifier = "neoforge"
+                    destinationDirectory = intermediateOutputsDirectory
+                }
 
-                dependsOn(targets.map { it.includeJarTaskName })
+                val includesJar = register<JarJar>(lowerCamelCaseGradleName(featureName, "includeJar")) {
+                    dependsOn(targets.map { it.includeJarTaskName })
+
+                    archiveBaseName = "$id-${featureName.camelToKebabCase()}"
+                    archiveClassifier = "neoforge"
+                    input = jar.flatMap { it.archiveFile }
+                    fromResolutionResults(include)
+                }
+
+                containerTasks += includesJar
+
+                build {
+                    dependsOn(includesJar)
+                }
             }
         }
 
         targets.withType<NeoforgeTarget> {
             loaderVersion = "21.1.192"
-
-            if (isContainer()) return@withType
 
             metadata {
                 modLoader = "kotlinforforge"
@@ -430,16 +512,6 @@ cloche {
     )
 
     targets.all {
-        if (isContainer()) {
-            if (this is ForgeLikeTarget) {
-                tasks.named<Jar>(includeJarTaskName) {
-                    exclude(modsManifestPath)
-                }
-            }
-
-            return@all
-        }
-
         dependsOn(mainCommon, commons.getValue(minecraftVersion.get()))
 
         runs {
@@ -515,8 +587,6 @@ fun String.camelToKebabCase(): String {
     return this.replace(pattern, "-$0").lowercase()
 }
 
-fun MinecraftTarget.isContainer() = name.startsWith("container")
-
 tasks {
     withType<ProcessResources> {
         duplicatesStrategy = DuplicatesStrategy.WARN
@@ -531,9 +601,9 @@ tasks {
 
         configurations.empty()
 
-        for (target in cloche.targets.filter { it.isContainer() }) {
-            from(target.finalJar.map { zipTree(it.archiveFile) })
-            manifest.inheritFrom(getByName<Jar>(target.includeJarTaskName).manifest)
+        for (task in containerTasks) {
+            from(task.map { zipTree(it.archiveFile) })
+            manifest.inheritFrom(task.get().manifest)
         }
 
         manifest {
