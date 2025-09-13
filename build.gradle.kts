@@ -167,7 +167,6 @@ cloche {
             mixins.from("src/common/1.21.1/main/resources/$id.1_21.mixins.json")
         },
     )
-
     run fabric@{
         val fabricCommon = common("fabric:common") {
             mixins.from(file("src/fabric/common/main/resources/$id.fabric.mixins.json"))
@@ -386,7 +385,7 @@ cloche {
 
             dependencies {
                 implementation("org.spongepowered:mixin:0.8.7")
-                implementation(catalog.mixinextras.common)
+                compileOnly(catalog.mixinextras.common)
                 implementation(catalog.mixinextras.forge)
 
                 modImplementation("thedarkcolour:kotlinforforge:4.11.0")

@@ -35,12 +35,12 @@ jobs:
           changelog: ${{ steps.changelog.outputs.changes }}
           # Only include this section if you wish to publish
           # your assets on Modrinth.
-          modrinth-id: calypsos-mobs
+          modrinth-id: calypsos-afflatus
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           # Only include this section if you wish to publish
           # your assets on CurseForge.
-          curseforge-id: 1321832
+          curseforge-id: 1346157
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           files: |
@@ -73,12 +73,12 @@ jobs:
           changelog: ${{ steps.changelog.outputs.changes }}
           # Only include this section if you wish to publish
           # your assets on Modrinth.
-          modrinth-id: calypsos-mobs
+          modrinth-id: calypsos-afflatus
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           # Only include this section if you wish to publish
           # your assets on CurseForge.
-          curseforge-id: 1321832
+          curseforge-id: 1346157
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           files: |
